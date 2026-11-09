@@ -6,15 +6,13 @@ import Footer from './Components/HomePage/Footer';
 function App() {
   return (
     <div className="bg-[#080F1E] h-screen grid grid-cols-[auto_1fr_1fr] grid-rows-[1fr_1fr_50px] 
-    [grid-template-areas:'sidebar_main_main''sidebar_main_main''sidebar_footer_footer'] text-[white]
+    [grid-template-areas:'sidebar_main_main''sidebar_main_main''sidebar_main_main'] text-[white]
     gap-1">
       <BrowserRouter>
       <SideBar/>
         <Routes>
           <Route path='/' element={<Board/>} />
         </Routes>
-
-        <Footer/>
       </BrowserRouter>
      
     </div>
