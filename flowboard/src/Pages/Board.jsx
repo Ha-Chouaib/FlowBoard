@@ -1,7 +1,6 @@
-import React from 'react'
 
 export default function Board() {
   return (
-    <div>Board Test</div>
+    <div className="[grid-area:main] ">Board Test</div>
   )
 }
