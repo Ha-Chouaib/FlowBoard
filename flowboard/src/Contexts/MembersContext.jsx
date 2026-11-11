@@ -1,11 +1,11 @@
-import {createContext} from 'react'
+import {createContext, useState} from 'react'
 
-export let Members =[];
 
 export const MembersContext = createContext(null);
 
 export function MembersContextProvider({childern})
 {
+    const [Members , setMembers] = useState([]);
     
     function loadMembers()
     {
@@ -15,11 +15,13 @@ export function MembersContextProvider({childern})
         }
         }).then(response => response.json())
             .then((data)=>{
-                Members = data;
+                setMembers(data);
+                console.log("///")
             });
     }
-
-    <MembersContext.Provider value={{Members , loadMembers}}>
-        {childern}
-    </MembersContext.Provider>
+    return( 
+        <MembersContext.Provider value={{Members , loadMembers}}>
+            {childern}
+        </MembersContext.Provider>
+    )
 }
