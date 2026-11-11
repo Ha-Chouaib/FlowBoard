@@ -3,7 +3,7 @@ import {createContext, useState} from 'react'
 
 export const MembersContext = createContext(null);
 
-export function MembersContextProvider({childern})
+export function MembersContextProvider({children})
 {
     const [Members , setMembers] = useState([]);
     
@@ -16,12 +16,12 @@ export function MembersContextProvider({childern})
         }).then(response => response.json())
             .then((data)=>{
                 setMembers(data);
-                console.log("///")
+                console.log(Members)
             });
     }
     return( 
         <MembersContext.Provider value={{Members , loadMembers}}>
-            {childern}
+            {children}
         </MembersContext.Provider>
     )
 }

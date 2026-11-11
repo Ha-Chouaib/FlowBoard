@@ -22,7 +22,6 @@ export default function CardsListProvider({children}) {
             }).catch(e => {
                 console.log(e);
             });
-           console.log("heool");
             
     }
 

@@ -48,13 +48,24 @@ export default function ListCards({cards}) {
     }
 
   return (
-    <section className={`bg-[${bgColor}] min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px]  border-[${brushColor}]
-                        shadow-[inset_0_0px_2px_2px_${brushColor}] max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}>
+    <section className={`min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px] 
+                        max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
+                        style={{
+                            backgroundColor:bgColor,
+                            borderColor: brushColor,
+                            boxShadow:`inset 0 0px 2px 2px ${brushColor}`
+                        }}>
         <div className="px-5 py-2 flex flex-row items-center gap-4">
-            <span className= {`inline-block w-[15px] h-[15px] rounded-full bg-[${brushColor}]`}></span>
+            <span className= {`inline-block w-[15px] h-[15px] rounded-full`}
+                    style={{
+                            backgroundColor: brushColor
+                            }}></span>
             <small className="ml-5 font-bold text-[17px]">{listTitle}</small>
-            <small className={`inline-block w-[30px] h-[30px] bg-[${brushColor}] flex items-center justify-center
-                                rounded-full font-semibold`}>{cardsCount}</small>
+            <small className={`w-[30px] h-[30px] flex items-center justify-center
+                                rounded-full font-semibold`}
+                                style={{
+                                    backgroundColor: brushColor
+                                }}>{cardsCount}</small>
         </div>
         <div className="px-3 flex flex-col gap-4">
             {cards.map((c,index)=>{
