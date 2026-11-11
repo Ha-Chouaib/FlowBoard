@@ -10,16 +10,16 @@ export default function Card({card}) {
          switch(card.priority)
     {
         case"high":
-            setPriorityBg(highBg)
+            setPriorityBg(highBg);
             break;
         case"medium":
-            setPriorityBg(mediumBg)
+            setPriorityBg(mediumBg);
             break;
         case"low":
-            setPriorityBg(lowBg)
+            setPriorityBg(lowBg);
             break;
     }
-    },[priorityBg])
+    },[highBg,mediumBg,lowBg])
    
     return (
     <article className="bg-[#111D32] rounded-lg min-w-[200px] border-l-[5px] 

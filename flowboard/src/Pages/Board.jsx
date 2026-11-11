@@ -21,23 +21,26 @@ export default function Board() {
 
     useEffect(()=>{
         
-        console.log( searchTerm, priorityFilter,memberFilter);
+        
 
     },[Members,searchTerm,priorityFilter,memberFilter]);
 
-    const filtredCards = (searchTerm === "" && priorityFilter ==="all" && memberFilter ==="all")? Cards : 
-                        Cards.filter(c => c.assignee === memberFilter && c.priority === priorityFilter);
+    let filteredCards = Cards;
+    filteredCards = filteredCards.filter(c => searchTerm ==="" || c.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    filteredCards = filteredCards.filter(c => memberFilter === "all" ||  c.assignee === memberFilter );
+    filteredCards = filteredCards.filter(c => priorityFilter === "all" ||  c.priority === priorityFilter );
+
   return (
     <div className="[grid-area:main] max-h-screen overflow-y-auto">
         
         <Header/>
         <FilterCards OnSearchTermChanged={setSearchTerm} priorityFilter={priorityFilter} OnPriorityFilterChanged={setPriorityFilter}
                     memberFilter={memberFilter} OnMemberFilterChanged={setMemberFilter}/>
-        <div className="flex flex-row justify-center items-center gap-5 mt-10">
+        <div className="flex flex-row justify-center items-start gap-5 mt-10">
 
-            <ListCards cards = {filtredCards?.filter(c => c.status ==="todo" ) } />
-            <ListCards cards = {filtredCards?.filter(c => c.status ==="in-progress" ) }/>
-            <ListCards cards = {filtredCards?.filter(c => c.status ==="done" )}/>
+            <ListCards cards = {filteredCards?.filter(c => c.status ==="todo" ) } />
+            <ListCards cards = {filteredCards?.filter(c => c.status ==="in-progress" ) }/>
+            <ListCards cards = {filteredCards?.filter(c => c.status ==="done" )}/>
         </div>
     
     </div>
