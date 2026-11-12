@@ -1,7 +1,8 @@
 
 import { useContext, useState } from 'react';
 import {MembersContext} from '../../Contexts/MembersContext'
-
+import Swal from 'sweetalert2'
+import { AddNewPanelValidators as validators  } from '../../Utils/validators';
 
 export default function AddNewCard({OnClose, AppendCard}) {
 
@@ -49,9 +50,8 @@ export default function AddNewCard({OnClose, AppendCard}) {
         setDueDate("");
       }
 
-      function saveData()
+      function collectData()
       {
-        //...
         currentCard.id = -1;
         currentCard.title = title;
         currentCard.description = description;
@@ -63,8 +63,35 @@ export default function AddNewCard({OnClose, AppendCard}) {
         currentCard.createdAt =  Date.now().toString() ;
         currentCard.updatedAt =  Date.now().toString() ;
         
+      }
+
+      function saveData()
+      {
+
+        Swal.fire({
+          title: "Sure to add this task?",
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          denyButtonText: `No`
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed)
+            {
+              if(!validators.valideTitle(title) || !validators.validDueDate(dueDate) || !validators.validPriority(priority) || !validators.validMember(member) || !validators.validStatus(status) )
+              {
+                Swal.fire("invalide data please enter required info properly !", "", "error");
+                return;
+              }
+              collectData();
+              AppendCard(currentCard);
+              Swal.fire("Saved!", "", "success");
+            } 
+          else if (result.isDenied) Swal.fire("Changes are not saved", "", "info");
+        });
+        
+        
         //...
-        AppendCard(currentCard)
       }
       function cancelOperation()
       {
@@ -152,7 +179,6 @@ export default function AddNewCard({OnClose, AppendCard}) {
                                   shadow-[inset_2px_2px_20px_5px_#0068fa]'
               name="priority"
               >
-                <option value={""} disabled >pick a memmber</option>
                  {Members?.map((m, index) =>{
                   return   <option value={m.name} key={index}>{m.name}</option>
                 })}
@@ -179,7 +205,7 @@ export default function AddNewCard({OnClose, AppendCard}) {
 
         <div className='flex flex-row items-center justify-center gap-3'>
           <button type='button' 
-          onClick={_ =>{}}
+          onClick={_ =>{cancelOperation()}}
           className='w-[200px] h-[40px] rounded-lg outline-none border-2 border-[#0068fa] text-[#0068fa]'>Cancel</button>
           <button type='button'
             onClick={_ => {saveData()}}
