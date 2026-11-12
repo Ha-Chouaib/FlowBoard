@@ -6,6 +6,9 @@ export const CardsListContext = createContext(null);
 export default function CardsListProvider({children}) {
 
     const [Cards , setCards] = useState([]);
+    const [addedCards, setAddedCards] =  useState([]);
+
+    const addedCardsKey = "addedCards";
 
     function loadCards(searchTerm, priority, member , isRejected)
     {
@@ -14,12 +17,26 @@ export default function CardsListProvider({children}) {
         const priorityKey = "priority";
         const memberKey = "assignee";
 
+        setAddedCards(JSON.parse(localStorage.getItem(addedCardsKey)) ?? []);
+        let filtredLocalCards = addedCards;
         if(searchTerm)
+        {
             url.searchParams.set(searchTermKey,searchTerm);
+            filtredLocalCards= filtredLocalCards.filter(c => c.title.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()))
+        }
+           
         if(priority && priority !== "all")
+        {
             url.searchParams.set(priorityKey,priority);
+            filtredLocalCards = filtredLocalCards.filter(c => c.priority === priority);
+        }
+            
         if(member && member !== "all")
+        {
             url.searchParams.set(memberKey,member);
+            filtredLocalCards = filtredLocalCards.filter(c => c.assignee === member);
+        }
+            
 
         let result = fetch(url.toString(), {
                         headers: {
@@ -35,8 +52,12 @@ export default function CardsListProvider({children}) {
                     throw new Error(res.statusText)
                 }
             }).then( data =>{
-                setCards(data);
-            
+
+                if(filtredLocalCards.length > 0)
+                    setCards([...data,...filtredLocalCards]);
+                else
+                    setCards(data);
+                
             }).catch(e => {
                 isRejected({success:false, errorMsg: e.message});
                 
@@ -47,6 +68,8 @@ export default function CardsListProvider({children}) {
     function appendNewCard(card)
     {
         setCards([...Cards,card]);
+        setAddedCards([...addedCards,card]);
+        localStorage.setItem(addedCardsKey,JSON.stringify(addedCards));
     }
 
   return (

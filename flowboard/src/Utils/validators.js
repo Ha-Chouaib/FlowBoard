@@ -6,29 +6,25 @@ function isEmptyString(term)
 
 function validateTitle(term)
 {
-    if(isEmptyString) return false;
-    return true;
+    return isEmptyString(term) ? "Task title is required to continue please feel the fieled": null;
 }
 function validateDueDate(date)
 {
-    if(isEmptyString) return false;
     let d = new Date(date);
-    if(d < Date.now()) return false;
-
-    return true;
+    return isEmptyString(date) ? "You have to pick a due date to continue the process": (d < Date.now()) ? "You must pick tody or day in the future" : null;
     
 }
 function validatePriority(term) 
 {
-    return !isEmptyString(term);
+    return isEmptyString(term) ? "Priority is required!" : null;
 }
 function validateMember(term)
 {
-     return !isEmptyString(term);
+     return isEmptyString(term)? "You have to select a member first" : null;
 }
 function validateStatus(term)
 {
-     return !isEmptyString(term);
+     return isEmptyString(term) ? "Status is required!" : null;
 }
 
 export const AddNewPanelValidators = {

@@ -78,9 +78,10 @@ export default function AddNewCard({OnClose, AppendCard}) {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed)
             {
-              if(!validators.valideTitle(title) || !validators.validDueDate(dueDate) || !validators.validPriority(priority) || !validators.validMember(member) || !validators.validStatus(status) )
+              let errMsg = validators.valideTitle(title) ?? validators.validDueDate(dueDate) ?? validators.validPriority(priority) ?? validators.validMember(member) ?? validators.validStatus(status) ;
+              if(errMsg)
               {
-                Swal.fire("invalide data please enter required info properly !", "", "error");
+                Swal.fire(errMsg, "", "error");
                 return;
               }
               collectData();
