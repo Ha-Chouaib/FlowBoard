@@ -7,7 +7,7 @@ export default function CardsListProvider({children}) {
 
     const [Cards , setCards] = useState([]);
 
-    function loadCards(searchTerm, priority, member)
+    function loadCards(searchTerm, priority, member , isRejected)
     {
         const url = new URL("/cards","https://flowboard-api-virid.vercel.app");
         const searchTermKey = "title_like";
@@ -27,7 +27,8 @@ export default function CardsListProvider({children}) {
                         }});
             result.then( res =>{
                 if(res.ok)
-                {
+                {   
+                    isRejected({success:true, errorMsg:""});
                     return res.json();
                 }else
                 {
@@ -37,7 +38,8 @@ export default function CardsListProvider({children}) {
                 setCards(data);
             
             }).catch(e => {
-                console.log(e);
+                isRejected({success:false, errorMsg: e.message});
+                
             });
             
     }

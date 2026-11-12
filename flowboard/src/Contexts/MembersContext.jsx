@@ -16,7 +16,6 @@ export function MembersContextProvider({children})
         }).then(response => response.json())
             .then((data)=>{
                 setMembers(data);
-                console.log(Members)
             });
     }
     return( 

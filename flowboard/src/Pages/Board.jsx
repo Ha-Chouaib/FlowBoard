@@ -15,7 +15,10 @@ export default function Board() {
     const [searchTerm, setSearchTerm] = useState("");
     const [priorityFilter, setPriorityFilter] = useState("all");
     const [memberFilter, setMemberFilter] = useState("all");
-    const [IsAddNewWindowOpen, setAddNewOpenState] = useState(false)
+    const [IsAddNewWindowOpen, setAddNewOpenState] = useState(false);
+    const [successObj, setSuccess ] = useState({success: true, errorMsg:""});
+
+    const retry = () => loadCards(searchTerm,priorityFilter,memberFilter, setSuccess)
 
     let filteredCards = [];
     useEffect(()=>{
@@ -23,7 +26,7 @@ export default function Board() {
     },[])
 
     useEffect(()=>{
-        loadCards(searchTerm,priorityFilter,memberFilter);
+        loadCards(searchTerm,priorityFilter,memberFilter, setSuccess);
 
     },[Members,searchTerm,priorityFilter,memberFilter]);
 
@@ -34,9 +37,9 @@ export default function Board() {
     <div className="[grid-area:main] max-h-screen overflow-y-auto relative  flex justify-start flex-col gap-1">
         <Modal modalContent={<AddNewCard OnClose={setAddNewOpenState} AppendCard={appendNewCard}/>} isOpen={IsAddNewWindowOpen} mainBg="#06162c61"/>
         <Header OpenAddNewCardWindow ={setAddNewOpenState}/>
-        <DisplayLoadingErrors />
-        <FilterCards OnSearchTermChanged={setSearchTerm} priorityFilter={priorityFilter} OnPriorityFilterChanged={setPriorityFilter}
-                    memberFilter={memberFilter} OnMemberFilterChanged={setMemberFilter}/>
+        <DisplayLoadingErrors isSuccess={successObj.success} errorMsg={successObj.errorMsg} retry={retry}/>
+        <FilterCards searchTerm={searchTerm} OnSearchTermChanged={setSearchTerm} priorityFilter={priorityFilter} OnPriorityFilterChanged={setPriorityFilter}
+                    memberFilter={memberFilter} OnMemberFilterChanged={setMemberFilter} />
         <div className="flex flex-row justify-center items-start gap-5 mt-4">
 
             <ListCards cards = {filteredCards?.filter(c => c.status ==="todo" ) } />
