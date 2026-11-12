@@ -1,14 +1,22 @@
-import React, {createContext, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import Card from "../Components/Card";
 
 export const CardsListContext = createContext(null);
 
 export default function CardsListProvider({children}) {
 
-    const [Cards , setCards] = useState([]);
-    const [addedCards, setAddedCards] =  useState([]);
-
     const addedCardsKey = "addedCards";
+
+    const [Cards , setCards] = useState([]);
+    const [addedCards, setAddedCards] =  useState(() => {return JSON.parse(localStorage.getItem(addedCardsKey)) ?? [];});
+
+    
+    useEffect(()=>{
+        localStorage.setItem(
+        addedCardsKey,
+        JSON.stringify(addedCards)
+    );
+    },[addedCards]);
 
     function loadCards(searchTerm, priority, member , isRejected)
     {
@@ -17,44 +25,45 @@ export default function CardsListProvider({children}) {
         const priorityKey = "priority";
         const memberKey = "assignee";
 
-        setAddedCards(JSON.parse(localStorage.getItem(addedCardsKey)) ?? []);
-        let filtredLocalCards = addedCards;
         if(searchTerm)
-        {
             url.searchParams.set(searchTermKey,searchTerm);
-            filtredLocalCards= filtredLocalCards.filter(c => c.title.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()))
-        }
            
         if(priority && priority !== "all")
-        {
             url.searchParams.set(priorityKey,priority);
-            filtredLocalCards = filtredLocalCards.filter(c => c.priority === priority);
-        }
             
         if(member && member !== "all")
-        {
             url.searchParams.set(memberKey,member);
-            filtredLocalCards = filtredLocalCards.filter(c => c.assignee === member);
-        }
             
 
-        let result = fetch(url.toString(), {
-                        headers: {
-                          'X-Workspace': 'public'
-                        }});
+        let result = fetch(url.toString(), {headers: {'X-Workspace': 'public'}});
+
             result.then( res =>{
                 if(res.ok)
                 {   
                     isRejected({success:true, errorMsg:""});
                     return res.json();
                 }else
-                {
-                    throw new Error(res.statusText)
-                }
+                    throw new Error(res.statusText);
+
             }).then( data =>{
 
+                
+                let filtredLocalCards = addedCards;
+
+                 
+                
+
                 if(filtredLocalCards.length > 0)
+                {
+                    if(searchTerm)
+                        filtredLocalCards= filtredLocalCards?.filter(c => c.title?.toLocaleLowerCase().includes(searchTerm?.toLocaleLowerCase()))
+                    if(priority && priority !== "all")
+                        filtredLocalCards = filtredLocalCards?.filter(c => c.priority === priority);
+                    if(member && member !== "all")
+                        filtredLocalCards = filtredLocalCards?.filter(c => c.assignee === member);
+
                     setCards([...data,...filtredLocalCards]);
+                }
                 else
                     setCards(data);
                 
@@ -68,8 +77,7 @@ export default function CardsListProvider({children}) {
     function appendNewCard(card)
     {
         setCards([...Cards,card]);
-        setAddedCards([...addedCards,card]);
-        localStorage.setItem(addedCardsKey,JSON.stringify(addedCards));
+        setAddedCards(prev => [...prev,card]);
     }
 
   return (
