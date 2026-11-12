@@ -3,9 +3,30 @@ import { useContext, useState } from 'react';
 import {MembersContext} from '../../Contexts/MembersContext'
 
 
-export default function AddNewCard({OnClose}) {
+export default function AddNewCard({OnClose, AppendCard}) {
 
       const {Members} = useContext(MembersContext);
+      
+
+      const currentCard = {
+        id: -1,
+        title: "",
+        description: "",
+        status: "",
+        priority: "",
+        assignee: "",
+        dueDate: "",
+        tags: [],
+        createdAt:"",
+        updatedAt: ""
+      }
+      
+      const [title , setTitle] = useState("");
+      const [dueDate, setDueDate] = useState("");
+      const [description, setDescription] = useState("");
+      const [priority, setPriority] = useState("low");
+      const [member, setMember] = useState("");
+      const [status, setStatus] = useState("todo");
       const [Tags, setTags] = useState([]);
 
       const appendTag = (tag)=>{
@@ -16,8 +37,33 @@ export default function AddNewCard({OnClose}) {
       const removeTag = (tag) =>{
         setTags(Tags.filter(( t => t !== tag )));
       }
-  
+      
+      function resetForm()
+      {
+        setTitle("")
+      }
 
+      function saveData()
+      {
+        //...
+        currentCard.id = -1;
+        currentCard.title = title;
+        currentCard.description = description;
+        currentCard.status = status;
+        currentCard.priority = priority;
+        currentCard.assignee = member;
+        currentCard.dueDate = dueDate;
+        currentCard.tags = Tags;
+        currentCard.createdAt =  Date.now().toString() ;
+        currentCard.updatedAt =  Date.now().toString() ;
+        
+        //...
+        AppendCard(currentCard)
+      }
+      function cancelOperation()
+      {
+        OnClose(false);
+      }
   return (
     <form className='h-[100%] flex flex-col gap-4'>
         <div className="flex flex-row justify-between items-center ">
@@ -35,12 +81,14 @@ export default function AddNewCard({OnClose}) {
         <div className='flex flex-row justify-between items-center'>
            <label className='flex flex-col gap-1 w-[50%]'>
             <small className='opacity-75'>Title*</small>
-            <input className='grow outline-none rounded-lg bg-[#0425529f] h-[40px] px-4 border-2 border-[#b4c2d54c]'
+            <input onChange={(e)=>{setTitle(e.currentTarget.value)}} 
+            className='grow outline-none rounded-lg bg-[#0425529f] h-[40px] px-4 border-2 border-[#b4c2d54c]'
             type="text" placeholder="enter the cards title" required maxLength={100} name="cardTitle" />
           </label>
           <label className='flex flex-col gap-1 w-[45%]'>
             <small className='opacity-75'>Due Date</small>
-            <input className='grow outline-none rounded-lg bg-[#0425529f] h-[40px] px-4 border-2 border-[#b4c2d54c]'
+            <input onChange={(e)=>{setDueDate(e.currentTarget.value)}} 
+            className='grow outline-none rounded-lg bg-[#0425529f] h-[40px] px-4 border-2 border-[#b4c2d54c]'
             type='date' name='dueDate' />
           </label>
         </div>
@@ -67,7 +115,8 @@ export default function AddNewCard({OnClose}) {
 
           <label className='flex flex-col gap-1 w-[45%]'>
             <small className='opacity-75'>Description</small>
-            <textarea className='grow outline-none rounded-lg bg-[#0425529f] h-[150px] px-4 border-2 border-[#b4c2d54c]'
+            <textarea onChange={(e)=>{setDescription(e.currentTarget.value)}} 
+            className='grow outline-none rounded-lg bg-[#0425529f] h-[150px] px-4 border-2 border-[#b4c2d54c]'
             name="description" rows={3}></textarea>
           </label>
           
@@ -78,7 +127,8 @@ export default function AddNewCard({OnClose}) {
             <label className='flex flex-col items-center'>
 
               <small className='opacity-75 text-[8px]'>Priority</small>
-              <select className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
+              <select onChange={(e)=>{setPriority(e.currentTarget.value)}} 
+              className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
                                   shadow-[inset_2px_2px_20px_5px_#0068fa]'
               name="priority" >
                 <option value="low">Low</option>
@@ -91,9 +141,11 @@ export default function AddNewCard({OnClose}) {
             <label className='flex flex-col items-center'>
 
               <small className='opacity-75 text-[8px]'>Member</small>
-              <select className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
+              <select onChange={(e)=>{setMember(e.currentTarget.value)}} 
+              className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
                                   shadow-[inset_2px_2px_20px_5px_#0068fa]'
-              name="priority" >
+              name="priority"
+              >
                 <option value={""} disabled >pick a memmber</option>
                  {Members?.map((m, index) =>{
                   return   <option value={m.name} key={index}>{m.name}</option>
@@ -105,7 +157,8 @@ export default function AddNewCard({OnClose}) {
             <label className='flex flex-col items-center'>
 
               <small className='opacity-75 text-[8px]'>Status</small>
-              <select className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
+              <select onChange={(e)=>{setStatus(e.currentTarget.value)}} 
+              className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
                                   shadow-[inset_2px_2px_20px_5px_#0068fa]'
               name="priority" >
                 <option value="todo">To Do</option>
@@ -119,8 +172,12 @@ export default function AddNewCard({OnClose}) {
         </div>
 
         <div className='flex flex-row items-center justify-center gap-3'>
-          <button type='button' className='w-[200px] h-[40px] rounded-lg outline-none border-2 border-[#0068fa] text-[#0068fa]'>Cancel</button>
-          <button type='button' className='w-[200px] h-[40px] rounded-lg outline-none bg-[#0068fa]'>Save</button>
+          <button type='button' 
+          onClick={_ =>{}}
+          className='w-[200px] h-[40px] rounded-lg outline-none border-2 border-[#0068fa] text-[#0068fa]'>Cancel</button>
+          <button type='button'
+            onClick={_ => {saveData()}}
+           className='w-[200px] h-[40px] rounded-lg outline-none bg-[#0068fa]'>Save</button>
         </div>
     </form>
   )

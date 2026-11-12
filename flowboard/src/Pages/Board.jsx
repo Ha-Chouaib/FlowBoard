@@ -9,7 +9,7 @@ import { useContext, useEffect, useState } from "react"
 import Modal from "../Components/Modal"
 
 export default function Board() {
-    const { Cards , loadCards} = useContext(CardsListContext);
+    const { Cards , loadCards, appendNewCard} = useContext(CardsListContext);
     const {Members ,loadMembers} = useContext(MembersContext);
     const [searchTerm, setSearchTerm] = useState("");
     const [priorityFilter, setPriorityFilter] = useState("all");
@@ -34,7 +34,7 @@ export default function Board() {
 
   return (
     <div className="[grid-area:main] max-h-screen overflow-y-auto relative  flex justify-center flex-col">
-        <Modal modalContent={<AddNewCard OnClose={setAddNewOpenState}/>} isOpen={IsAddNewWindowOpen} mainBg="#06162c61"/>
+        <Modal modalContent={<AddNewCard OnClose={setAddNewOpenState} AppendCard={appendNewCard}/>} isOpen={IsAddNewWindowOpen} mainBg="#06162c61"/>
         <Header OpenAddNewCardWindow ={setAddNewOpenState}/>
         <FilterCards OnSearchTermChanged={setSearchTerm} priorityFilter={priorityFilter} OnPriorityFilterChanged={setPriorityFilter}
                     memberFilter={memberFilter} OnMemberFilterChanged={setMemberFilter}/>

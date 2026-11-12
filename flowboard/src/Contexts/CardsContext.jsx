@@ -1,11 +1,12 @@
 import React, {createContext, useState} from "react";
+import Card from "../Components/Card";
 
 export const CardsListContext = createContext(null);
 
 export default function CardsListProvider({children}) {
 
     const [Cards , setCards] = useState([]);
-    
+
     function loadCards()
     {
         let result = fetch('https://flowboard-api-virid.vercel.app/cards', {
@@ -24,9 +25,13 @@ export default function CardsListProvider({children}) {
             });
             
     }
+    function appendNewCard(card)
+    {
+        setCards([...Cards,card]);
+    }
 
   return (
-    <CardsListContext.Provider value={{Cards , loadCards}}>
+    <CardsListContext.Provider value={{Cards , loadCards, appendNewCard}}>
         {children}
     </CardsListContext.Provider>
   )
