@@ -38,7 +38,7 @@ export default function Board() {
         <Modal modalContent={<AddNewCard OnClose={setAddNewOpenState} AppendCard={appendNewCard}/>} isOpen={IsAddNewWindowOpen} mainBg="#06162c61"/>
         <Header OpenAddNewCardWindow ={setAddNewOpenState}/>
         <DisplayLoadingErrors isSuccess={successObj.success} errorMsg={successObj.errorMsg} retry={retry}/>
-        <FilterCards searchTerm={searchTerm} OnSearchTermChanged={setSearchTerm} priorityFilter={priorityFilter} OnPriorityFilterChanged={setPriorityFilter}
+        <FilterCards OnSearchTermChanged={setSearchTerm} priorityFilter={priorityFilter} OnPriorityFilterChanged={setPriorityFilter}
                     memberFilter={memberFilter} OnMemberFilterChanged={setMemberFilter} />
         <div className="flex flex-row justify-center items-start gap-5 mt-4">
 
