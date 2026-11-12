@@ -40,7 +40,13 @@ export default function AddNewCard({OnClose, AppendCard}) {
       
       function resetForm()
       {
-        setTitle("")
+        setTitle("");
+        setDescription("");
+        setPriority("");
+        setStatus("");
+        setMember("");
+        setTags([]);
+        setDueDate("");
       }
 
       function saveData()

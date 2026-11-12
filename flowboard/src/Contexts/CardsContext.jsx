@@ -7,9 +7,21 @@ export default function CardsListProvider({children}) {
 
     const [Cards , setCards] = useState([]);
 
-    function loadCards()
+    function loadCards(searchTerm, priority, member)
     {
-        let result = fetch('https://flowboard-api-virid.vercel.app/cards', {
+        const url = new URL("/cards","https://flowboard-api-virid.vercel.app");
+        const searchTermKey = "title_like";
+        const priorityKey = "priority";
+        const memberKey = "assignee";
+
+        if(searchTerm)
+            url.searchParams.set(searchTermKey,searchTerm);
+        if(priority && priority !== "all")
+            url.searchParams.set(priorityKey,priority);
+        if(member && member !== "all")
+            url.searchParams.set(memberKey,member);
+
+        let result = fetch(url.toString(), {
                         headers: {
                           'X-Workspace': 'public'
                         }});
@@ -17,21 +29,26 @@ export default function CardsListProvider({children}) {
                 if(res.ok)
                 {
                     return res.json();
+                }else
+                {
+                    throw new Error(res.statusText)
                 }
             }).then( data =>{
                 setCards(data);
+            
             }).catch(e => {
                 console.log(e);
             });
             
     }
+    
     function appendNewCard(card)
     {
         setCards([...Cards,card]);
     }
 
   return (
-    <CardsListContext.Provider value={{Cards , loadCards, appendNewCard}}>
+    <CardsListContext.Provider value={{Cards , loadCards,appendNewCard}}>
         {children}
     </CardsListContext.Provider>
   )
