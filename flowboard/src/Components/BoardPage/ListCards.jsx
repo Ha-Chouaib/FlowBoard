@@ -41,15 +41,16 @@ export default function ListCards({cards}) {
     {
         return(
             <div className="bg-[#0057fa12] min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px]  border-[#3B82F6]
-                        shadow-[inset_0_0px_2px_2px_#3B82F6] max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <p>No tasks avialable to be listed</p>
+                        shadow-[inset_0_0px_2px_2px_#3B82F6] max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+                        flex items-center justify-center">
+                <p className="px-10 py-5 bg-zinc-950 rounded-full opacity-80">No tasks avialable to be listed</p>
             </div>
         );
     }
 
   return (
-    <section className={`min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px] 
-                        max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
+    <section className={`min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px] max-h-[70vh]
+                        `}
                         style={{
                             backgroundColor:bgColor,
                             borderColor: brushColor,
@@ -67,7 +68,7 @@ export default function ListCards({cards}) {
                                     backgroundColor: brushColor
                                 }}>{cardsCount}</small>
         </div>
-        <div className="px-3 flex flex-col gap-4">
+        <div className="px-3 flex flex-col gap-4 max-h-[63vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {cards.map((c,index)=>{
                 return <Card card ={c} key={index}/>
             })}

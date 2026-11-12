@@ -4,7 +4,9 @@ import FilterCards from "../Components/BoardPage/FilterCards"
 import ListCards from "../Components/BoardPage/ListCards"
 import { CardsListContext } from "../Contexts/CardsContext"
 import {MembersContext} from '../Contexts/MembersContext'
+import AddNewCard from "../Components/BoardPage/AddNewCard"
 import { useContext, useEffect, useState } from "react"
+import Modal from "../Components/Modal"
 
 export default function Board() {
     const { Cards , loadCards} = useContext(CardsListContext);
@@ -12,7 +14,7 @@ export default function Board() {
     const [searchTerm, setSearchTerm] = useState("");
     const [priorityFilter, setPriorityFilter] = useState("all");
     const [memberFilter, setMemberFilter] = useState("all");
-
+    const [IsAddNewWindowOpen, setAddNewOpenState] = useState(false)
 
     useEffect(()=>{
         loadCards();
@@ -31,12 +33,12 @@ export default function Board() {
     filteredCards = filteredCards.filter(c => priorityFilter === "all" ||  c.priority === priorityFilter );
 
   return (
-    <div className="[grid-area:main] max-h-screen overflow-y-auto">
-        
-        <Header/>
+    <div className="[grid-area:main] max-h-screen overflow-y-auto relative  flex justify-center flex-col">
+        <Modal modalContent={<AddNewCard OnClose={setAddNewOpenState}/>} isOpen={IsAddNewWindowOpen} mainBg="#06162c61"/>
+        <Header OpenAddNewCardWindow ={setAddNewOpenState}/>
         <FilterCards OnSearchTermChanged={setSearchTerm} priorityFilter={priorityFilter} OnPriorityFilterChanged={setPriorityFilter}
                     memberFilter={memberFilter} OnMemberFilterChanged={setMemberFilter}/>
-        <div className="flex flex-row justify-center items-start gap-5 mt-10">
+        <div className="flex flex-row justify-center items-start gap-5 mt-4">
 
             <ListCards cards = {filteredCards?.filter(c => c.status ==="todo" ) } />
             <ListCards cards = {filteredCards?.filter(c => c.status ==="in-progress" ) }/>
