@@ -1,5 +1,6 @@
 import { useContext , useEffect, useRef, useState} from "react"
 import {MembersContext} from '../../Contexts/MembersContext'
+import useDebounceCallback from "../../Hooks/Debonce";
 
 export default function FilterCards({OnSearchTermChanged, Filters,OnFiltersChanged,filtersKey, OnPriorityFilterChanged,OnMemberFilterChanged }) {
 
@@ -30,13 +31,15 @@ export default function FilterCards({OnSearchTermChanged, Filters,OnFiltersChang
         OnFiltersChanged({priority:priorityRef.current.value, member: memberRef.current.value});
 
     }
-  
+    const debouncedSearchTerm =  useDebounceCallback( OnSearchTermChanged,600);
   return (
     <form className="flex flex-row justify-center items-center gap-[2vw] mt-2">
         <input className="bg-[#18253B] w-[30%] outeline-none border-none h-[40px] rounded-lg px-5" 
             type="text" placeholder="search for card" name="searchTerm" 
             ref={titleRef}
-            onInput={(e)=>{OnSearchTermChanged(e.target.value)}}/>
+            onInput={(e)=>{
+                    debouncedSearchTerm(e.currentTarget.value);
+                }}/>
 
         <select className="cursor-pointer bg-[#18253B] w-[20%] outeline-none border-none h-[40px] rounded-lg px-5" 
                 value={Filters.priority}
