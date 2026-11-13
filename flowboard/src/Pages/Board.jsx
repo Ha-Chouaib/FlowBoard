@@ -10,11 +10,14 @@ import { useContext, useEffect, useState } from "react"
 import Modal from "../Components/Modal"
 
 export default function Board() {
+    const filtersKey = "filters";
+    const [filters, setFilters] = useState( JSON.parse( localStorage.getItem(filtersKey) ) ?? {priority: "all", member:"all"});
+    
     const { Cards , loadCards,appendNewCard} = useContext(CardsListContext);
     const {Members ,loadMembers} = useContext(MembersContext);
     const [searchTerm, setSearchTerm] = useState("");
-    const [priorityFilter, setPriorityFilter] = useState("all");
-    const [memberFilter, setMemberFilter] = useState("all");
+    const [priorityFilter, setPriorityFilter] = useState(filters.priority);
+    const [memberFilter, setMemberFilter] = useState(filters.member);
     const [IsAddNewWindowOpen, setAddNewOpenState] = useState(false);
     const [successObj, setSuccess ] = useState({success: true, errorMsg:""});
 
@@ -38,8 +41,8 @@ export default function Board() {
         <Modal modalContent={<AddNewCard OnClose={setAddNewOpenState} AppendCard={appendNewCard}/>} isOpen={IsAddNewWindowOpen} mainBg="#06162c61"/>
         <Header OpenAddNewCardWindow ={setAddNewOpenState}/>
         <DisplayLoadingErrors isSuccess={successObj.success} errorMsg={successObj.errorMsg} retry={retry}/>
-        <FilterCards OnSearchTermChanged={setSearchTerm} priorityFilter={priorityFilter} OnPriorityFilterChanged={setPriorityFilter}
-                    memberFilter={memberFilter} OnMemberFilterChanged={setMemberFilter} />
+        <FilterCards OnSearchTermChanged={setSearchTerm} Filters={filters} OnFiltersChanged={setFilters} filtersKey={filtersKey} OnPriorityFilterChanged={setPriorityFilter}
+                    OnMemberFilterChanged={setMemberFilter} />
         <div className="flex flex-row justify-center items-start gap-5 mt-4">
 
             <ListCards cards = {filteredCards?.filter(c => c.status ==="todo" ) } />
