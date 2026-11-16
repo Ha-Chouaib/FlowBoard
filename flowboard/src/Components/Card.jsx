@@ -1,10 +1,19 @@
-import {useEffect, useState} from 'react' 
+import {useEffect, useState, useContext} from 'react' 
+import CardContextMenu from './CardContextMenu';
+import { CardsListContext } from '../Contexts/CardsContext';
+import Modal from './Modal';
+import AddNewCard from './BoardPage/AddNewCard';
+
 export default function Card({card}) {
     const highBg = "#a50101";
     const mediumBg = "#f57b01";
     const lowBg = "#26c403";
 
     const [priorityBg, setPriorityBg] = useState(lowBg);
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const { updateCard} = useContext(CardsListContext);
+    const [isUpdateCard, setIsUpdateCard] =  useState(false);
+
 
     useEffect(()=>{
          switch(card.priority)
@@ -19,10 +28,25 @@ export default function Card({card}) {
             setPriorityBg(lowBg);
             break;
     }
-    },[highBg,mediumBg,lowBg])
-   
+    },[highBg,mediumBg,lowBg]);
+
+    
+    const CardActions ={
+        viewDetails:()=>{console.log("details");
+        },
+        updateCard: ()=>{
+            setIsUpdateCard(true)
+            updateCard(card)
+        },
+        deleteCard: () =>{console.log("delete");
+        }
+}
+
+
     return (
-    <article className="bg-[#111D32] rounded-lg min-w-[200px] border-l-[5px] 
+        <>
+         <Modal modalContent={<AddNewCard OnClose={setIsUpdateCard} updateCard={updateCard} cardToUpdate={card} />}  isOpen={isUpdateCard} mainBg="#06162c61"/>
+        <article  className="bg-[#111D32] rounded-lg min-w-[200px] border-l-[5px] relative
                         p-5 flex flex-row justify-between shadow-[0px_3px_7px_4px_#07070848]"
             style={{
                 borderLeftColor: priorityBg
@@ -41,10 +65,13 @@ export default function Card({card}) {
                 <small className="bg-[#18253B] px-2 rounded-lg shadow-[0px_0px_2px_2px_#ffffff3a]">{card.assignee}</small> </div>
             </div>
         <div className="flex flex-col justify-between" >
-            <button className="cursor-pointer">⋮</button>
+            <button onClick={()=>{setIsMenuOpen(!isMenuOpen)}}
+            className="cursor-pointer">⋮</button>
             <span className="cursor-pointer flex items-center justify-center font-black text-[20px] bg-black w-[30px] h-[30px] rounded-full">♟</span> 
         </div>
-        
+        <CardContextMenu showContextMenu={isMenuOpen} isMenuOpen={setIsMenuOpen} cardActions={CardActions} />
     </article>
+        </>
+    
   )
 }
