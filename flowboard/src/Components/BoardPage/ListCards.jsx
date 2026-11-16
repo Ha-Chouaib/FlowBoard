@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useCallback } from "react";
 import Card from "../Card"
 export default function ListCards({cards}) {
 
@@ -7,6 +7,8 @@ export default function ListCards({cards}) {
     const [brushColor , setBrushColor] = useState("");
     const [cardsCount , setCardsCount] = useState(0);
     const [listTitle , setListTitle] = useState("------");
+
+    const [isMenuOpen,setIsMenuOpen] = useState(false);
 
     useEffect(()=>{
         setCardsCount(cards?.length ?? 0)
@@ -35,9 +37,9 @@ export default function ListCards({cards}) {
 
         }
     },[cards]);
-    
 
-    if(cards.length === 0)
+
+ if(cards.length === 0)
     {
         return(
             <div className="bg-[#0057fa12] min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px]  border-[#3B82F6]
@@ -49,7 +51,7 @@ export default function ListCards({cards}) {
     }
 
   return (
-    <section className={`min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px] max-h-[70vh]
+    <section  className={`min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px] max-h-[70vh]
                         `}
                         style={{
                             backgroundColor:bgColor,
@@ -70,7 +72,7 @@ export default function ListCards({cards}) {
         </div>
         <div className="px-3 flex flex-col gap-4 max-h-[63vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {cards.map((c,index)=>{
-                return <Card card ={c} key={index}/>
+                return <Card card ={c}  key={index}/>
             })}
         </div>
 

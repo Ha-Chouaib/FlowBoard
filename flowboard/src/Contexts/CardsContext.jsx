@@ -79,9 +79,13 @@ export default function CardsListProvider({children}) {
         setCards([...Cards,card]);
         setAddedCards(prev => [...prev,card]);
     }
+    function updateCard(card)
+    {
+        console.log(card);
+    }
 
   return (
-    <CardsListContext.Provider value={{Cards , loadCards,appendNewCard}}>
+    <CardsListContext.Provider value={{Cards , loadCards,appendNewCard,updateCard}}>
         {children}
     </CardsListContext.Provider>
   )

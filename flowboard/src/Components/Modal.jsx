@@ -3,8 +3,8 @@ export default function Modal({modalContent,isOpen = false ,mainBg="#080F1E" }) 
     if(!isOpen) return null;
 
   return (
-    <div className={`h-[100%] w-[100%] rounded-lg absolute flex items-center justify-center
-                    z-10   backdrop-blur-sm`}
+    <div className={`h-[100%] w-[100%] rounded-lg fixed top-0 left-[50%] translate-x-[-50%] flex items-center justify-center
+                    z-30   backdrop-blur-sm`}
       style={{
         backgroundColor: mainBg
       }}>

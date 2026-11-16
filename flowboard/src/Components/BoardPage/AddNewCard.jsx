@@ -1,13 +1,33 @@
 
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {MembersContext} from '../../Contexts/MembersContext'
 import Swal from 'sweetalert2'
 import { AddNewPanelValidators as validators  } from '../../Utils/validators';
 
-export default function AddNewCard({OnClose, AppendCard}) {
+export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate}) {
 
       const {Members} = useContext(MembersContext);
-      
+      const [title , setTitle] = useState("");
+      const [dueDate, setDueDate] = useState("");
+      const [description, setDescription] = useState("");
+      const [priority, setPriority] = useState("low");
+      const [member, setMember] = useState("");
+      const [status, setStatus] = useState("todo");
+      const [Tags, setTags] = useState([]);
+
+      useEffect(()=>{
+
+        if(cardToUpdate)
+        {
+          setTitle(cardToUpdate.title);
+          setDescription(cardToUpdate.description);
+          setPriority(cardToUpdate.status);
+          setStatus(cardToUpdate.priority);
+          setMember(cardToUpdate.assignee);
+          setTags(cardToUpdate.tags);
+          setDueDate(cardToUpdate.dueDate);
+        }
+      },[cardToUpdate])
 
       const currentCard = {
         id: -1,
@@ -22,13 +42,7 @@ export default function AddNewCard({OnClose, AppendCard}) {
         updatedAt: ""
       }
       
-      const [title , setTitle] = useState("");
-      const [dueDate, setDueDate] = useState("");
-      const [description, setDescription] = useState("");
-      const [priority, setPriority] = useState("low");
-      const [member, setMember] = useState("");
-      const [status, setStatus] = useState("todo");
-      const [Tags, setTags] = useState([]);
+      
 
       const appendTag = (tag)=>{
         if(!Tags.includes(tag))
@@ -115,13 +129,13 @@ export default function AddNewCard({OnClose, AppendCard}) {
         <div className='flex flex-row justify-between items-center'>
            <label className='flex flex-col gap-1 w-[50%]'>
             <small className='opacity-75'>Title*</small>
-            <input onChange={(e)=>{setTitle(e.currentTarget.value)}} 
+            <input value={title} onChange={(e)=>{setTitle(e.currentTarget.value)} } 
             className='grow outline-none rounded-lg bg-[#0425529f] h-[40px] px-4 border-2 border-[#b4c2d54c]'
             type="text" placeholder="enter the cards title" required maxLength={100} name="cardTitle" />
           </label>
           <label className='flex flex-col gap-1 w-[45%]'>
             <small className='opacity-75'>Due Date</small>
-            <input onChange={(e)=>{setDueDate(e.currentTarget.value)}} 
+            <input value={dueDate} onChange={(e)=>{setDueDate(e.currentTarget.value)}} 
             className='grow outline-none rounded-lg bg-[#0425529f] h-[40px] px-4 border-2 border-[#b4c2d54c]'
             type='date' name='dueDate' />
           </label>
@@ -149,7 +163,7 @@ export default function AddNewCard({OnClose, AppendCard}) {
 
           <label className='flex flex-col gap-1 w-[45%]'>
             <small className='opacity-75'>Description</small>
-            <textarea onChange={(e)=>{setDescription(e.currentTarget.value)}} 
+            <textarea value={description} onChange={(e)=>{setDescription(e.currentTarget.value)}} 
             className='grow outline-none rounded-lg bg-[#0425529f] h-[150px] px-4 border-2 border-[#b4c2d54c]'
             name="description" rows={3}></textarea>
           </label>
@@ -161,7 +175,7 @@ export default function AddNewCard({OnClose, AppendCard}) {
             <label className='flex flex-col items-center'>
 
               <small className='opacity-75 text-[8px]'>Priority</small>
-              <select onChange={(e)=>{setPriority(e.currentTarget.value)}} 
+              <select value={priority} onChange={(e)=>{setPriority(e.currentTarget.value)}} 
               className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
                                   shadow-[inset_2px_2px_20px_5px_#0068fa]'
               name="priority" >
@@ -175,7 +189,7 @@ export default function AddNewCard({OnClose, AppendCard}) {
             <label className='flex flex-col items-center'>
 
               <small className='opacity-75 text-[8px]'>Member</small>
-              <select onChange={(e)=>{setMember(e.currentTarget.value)}} 
+              <select value={member} onChange={(e)=>{setMember(e.currentTarget.value)}} 
               className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
                                   shadow-[inset_2px_2px_20px_5px_#0068fa]'
               name="priority"
@@ -190,7 +204,7 @@ export default function AddNewCard({OnClose, AppendCard}) {
             <label className='flex flex-col items-center'>
 
               <small className='opacity-75 text-[8px]'>Status</small>
-              <select onChange={(e)=>{setStatus(e.currentTarget.value)}} 
+              <select value={status} onChange={(e)=>{setStatus(e.currentTarget.value)}} 
               className='grow outline-none rounded-full bg-[#0425529f] h-[40px] px-4 border-[.5px] border-[#b4c2d54c]
                                   shadow-[inset_2px_2px_20px_5px_#0068fa]'
               name="priority" >
