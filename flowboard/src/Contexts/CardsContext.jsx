@@ -1,5 +1,6 @@
 import React, {createContext, useEffect, useState} from "react";
-import Card from "../Components/Card";
+import axios from 'axios'  
+import { useShowFailureState,useShowPendingState,useShowSuccessState } from "../Hooks/useShowRequestState";
 
 export const CardsListContext = createContext(null);
 
@@ -17,6 +18,10 @@ export default function CardsListProvider({children}) {
         JSON.stringify(addedCards)
     );
     },[addedCards]);
+
+    const Pending = ()=> useShowPendingState();
+    const Success = () => useShowSuccessState();
+    const Failure = (error) => useShowFailureState(error)
 
     function loadCards(searchTerm, priority, member , isRejected)
     {
@@ -76,12 +81,66 @@ export default function CardsListProvider({children}) {
     
     function appendNewCard(card)
     {
+
+        // const options = {
+        //   method: 'POST',
+        //   url: 'https://flowboard-api-virid.vercel.app/cards',
+        //   headers: {
+        //     'X-Workspace': 'public',
+        //     'Content-Type': 'application/json'
+        //   },
+        //   data: {
+        //     title: 'Ajouter le mode sombre',
+        //     status: 'todo',
+        //     priority: 'medium',
+        //     assignee: 'Amina Haddad',
+        //     dueDate: '2026-12-01',
+        //     tags: ['ui']
+        //   }
+        // }
+
+        // try {
+        //   const { data } = await axios.request(options)
+        //   console.log(data)
+        // } catch (error) {
+        //   console.error(error)
+        // }
         setCards([...Cards,card]);
         setAddedCards(prev => [...prev,card]);
     }
-    function updateCard(card)
+    async function updateCard(card)
     {
-        console.log(card);
+    
+        const options = {
+          method: 'PUT',
+          url: `https://flowboard-api-virid.vercel.app/cards/${card.id}`,
+          headers: {
+            'X-Workspace': 'public',
+            'Content-Type': 'application/json',
+            'Password':'1234'
+          },
+          data: card,
+        }
+
+        try {
+
+        Pending();
+        const { data } = await axios.request(options);
+
+            let target =Cards.find(c => c.id === card.id);
+            target.title = card.title;
+            target.description = card.description;
+            target.status = card.status;
+            target.priority = card.priority;
+            target.assignee = card.member;
+            target.dueDate = card.dueDate;
+            target.tags = card.Tags;
+            target.updatedAt =  card.updatedAt ;
+            Success();
+            console.log(data)
+        } catch (error) {
+          Failure(error)
+        }
     }
 
   return (
@@ -90,3 +149,4 @@ export default function CardsListProvider({children}) {
     </CardsListContext.Provider>
   )
 }
+

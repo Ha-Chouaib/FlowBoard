@@ -36,7 +36,6 @@ export default function Card({card}) {
         },
         updateCard: ()=>{
             setIsUpdateCard(true)
-            updateCard(card)
         },
         deleteCard: () =>{console.log("delete");
         }
