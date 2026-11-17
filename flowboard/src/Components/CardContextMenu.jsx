@@ -29,7 +29,7 @@ export default function CardContextMenu({showContextMenu,isMenuOpen,cardActions}
 
                         <button onClick={()=>{cardActions.viewDetails();isMenuOpen(false) }} className='bg-[#005ff7] w-[100%] rounded-full cursor-pointer'>view Details</button>
                         <button onClick={()=>{cardActions.updateCard() ;isMenuOpen(false) }} className='bg-[#005ff7] w-[100%] rounded-full cursor-pointer'>update</button>
-                        <button onClick={()=>{cardActions.deleteCard() ;isMenuOpen(false) }} className='bg-[#005ff7] w-[100%] rounded-full cursor-pointer'>delete</button>
+                        <button onClick={()=>{cardActions.deleteCard() ;isMenuOpen(false) }} className='bg-[#94020e] w-[100%] rounded-full cursor-pointer'>delete</button>
                     </div>
   )
 }

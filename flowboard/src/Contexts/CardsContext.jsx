@@ -21,7 +21,7 @@ export default function CardsListProvider({children}) {
 
     const Pending = ()=> useShowPendingState();
     const Success = () => useShowSuccessState();
-    const Failure = (error) => useShowFailureState(error)
+    const Failure = (error) => useShowFailureState(error);
 
     function loadCards(searchTerm, priority, member , isRejected)
     {
@@ -45,7 +45,9 @@ export default function CardsListProvider({children}) {
             result.then( res =>{
                 if(res.ok)
                 {   
-                    isRejected({success:true, errorMsg:""});
+                    if(isRejected)
+                        isRejected({success:true, errorMsg:""});
+                    
                     return res.json();
                 }else
                     throw new Error(res.statusText);
@@ -53,10 +55,7 @@ export default function CardsListProvider({children}) {
             }).then( data =>{
 
                 
-                let filtredLocalCards = addedCards;
-
-                 
-                
+                let filtredLocalCards = addedCards;  
 
                 if(filtredLocalCards.length > 0)
                 {
@@ -73,6 +72,7 @@ export default function CardsListProvider({children}) {
                     setCards(data);
                 
             }).catch(e => {
+                if(isRejected)
                 isRejected({success:false, errorMsg: e.message});
                 
             });
@@ -110,14 +110,14 @@ export default function CardsListProvider({children}) {
     }
     async function updateCard(card)
     {
+        console.log(card)
     
         const options = {
           method: 'PUT',
-          url: `https://flowboard-api-virid.vercel.app/cards/${card.id}`,
+          url: `https://flowboard-api-virid.vercel.app/cards/${card.id}?password=1234`,
           headers: {
             'X-Workspace': 'public',
             'Content-Type': 'application/json',
-            'Password':'1234'
           },
           data: card,
         }
@@ -126,25 +126,58 @@ export default function CardsListProvider({children}) {
 
         Pending();
         const { data } = await axios.request(options);
-
-            let target =Cards.find(c => c.id === card.id);
-            target.title = card.title;
-            target.description = card.description;
-            target.status = card.status;
-            target.priority = card.priority;
-            target.assignee = card.member;
-            target.dueDate = card.dueDate;
-            target.tags = card.Tags;
-            target.updatedAt =  card.updatedAt ;
-            Success();
-            console.log(data)
+        loadCards()
+        Success();
+            
         } catch (error) {
           Failure(error)
         }
     }
 
+    async function deleteCard(id)
+    {
+
+        const options = {
+          method: 'DELETE',
+          url: `https://flowboard-api-virid.vercel.app/cards/${id}?password=1234`,
+          headers: {
+            'X-Workspace': 'public'
+          }
+        }
+
+        try {
+            Pending();
+            const { data } = await axios.request(options)
+            setCards(prev => prev.filter(c => c.id !== id));
+            Success();
+
+        } catch (error) {
+            Failure();
+        }
+    }
+
+    async function getCard(id) {
+        
+
+    const options = {
+      method: 'GET',
+      url: 'https://flowboard-api-virid.vercel.app/cards/'+id,
+      headers: {
+        'X-Workspace': 'public'
+      }
+    }
+
+    try {
+      const { data } = await axios.request(options)
+      return data;
+    } catch (error) {
+      console.error(error)
+      return null;
+    }
+    }
+
   return (
-    <CardsListContext.Provider value={{Cards , loadCards,appendNewCard,updateCard}}>
+    <CardsListContext.Provider value={{Cards , loadCards,appendNewCard,updateCard,deleteCard,getCard}}>
         {children}
     </CardsListContext.Provider>
   )

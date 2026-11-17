@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import {MembersContext} from '../../Contexts/MembersContext'
 import Swal from 'sweetalert2'
 import { AddNewPanelValidators as validators  } from '../../Utils/validators';
-
+import { swalConfirm } from '../../Hooks/SwalConfirmation';
 export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate}) {
 
       const {Members} = useContext(MembersContext);
@@ -16,22 +16,25 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
       const [Tags, setTags] = useState([]);
       const [isEditMode, setIsEditMode] = useState(false);
 
-
       useEffect(()=>{
 
         if(cardToUpdate)
         {
+        
+          
           setTitle(cardToUpdate.title);
           setDescription(cardToUpdate.description);
-          setPriority(cardToUpdate.status);
-          setStatus(cardToUpdate.priority);
+          setPriority(cardToUpdate.priority);
+          setStatus(cardToUpdate.status);
           setMember(cardToUpdate.assignee);
           setTags(cardToUpdate.tags);
           setDueDate(cardToUpdate.dueDate);
 
-          setIsEditMode(true)
+          setIsEditMode(true);
         }
       },[cardToUpdate])
+
+     
 
       const currentCard = {
         id: -1,
@@ -90,21 +93,14 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
       {
         OnClose(false);
       }
-       function save()
+       async function save()
       {
-        
 
-        Swal.fire({
-          title: isEditMode? "Sure to save updates": "Sure to add this task?",
-          showDenyButton: true,
-          showCancelButton: true,
-          confirmButtonText: "Yes",
-          denyButtonText: `No`
-        }).then((result) => {
-          
-          if (result.isConfirmed)
-            {
-              let errMsg = validators.valideTitle(title) ?? validators.validDueDate(dueDate) ?? validators.validPriority(priority) ?? validators.validMember(member) ?? validators.validStatus(status) ;
+        let isConfirmed =  await swalConfirm(isEditMode ? 'Sure to save updates?' : 'Sure to add this task?');
+        
+        if(isConfirmed)
+        {
+             let errMsg = validators.valideTitle(title) ?? validators.validDueDate(dueDate) ?? validators.validPriority(priority) ?? validators.validMember(member) ?? validators.validStatus(status) ;
               if(errMsg)
               {
                 Swal.fire(errMsg, "", "error");
@@ -113,18 +109,18 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
                 collectData();
               if(isEditMode)
               {
+                currentCard.id = cardToUpdate.id;
                 updateCard(currentCard);
               }else
               {
                 AppendCard(currentCard);
                 Swal.fire("Saved!", "", "success");
               }
-             
-            } 
-          else if (result.isDenied) Swal.fire("Changes are not saved", "", "info");
-        });
-        
-        
+        }else
+        {
+            Swal.fire("Changes are not saved", "", "info");
+        }
+
       }
   return (
     <form  onSubmit={(e)=>{ e.preventDefault()}} className='h-[100%] flex flex-col gap-4'>

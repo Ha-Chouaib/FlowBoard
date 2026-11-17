@@ -3,6 +3,7 @@ import CardContextMenu from './CardContextMenu';
 import { CardsListContext } from '../Contexts/CardsContext';
 import Modal from './Modal';
 import AddNewCard from './BoardPage/AddNewCard';
+import { swalConfirm } from '../Hooks/SwalConfirmation';
 
 export default function Card({card}) {
     const highBg = "#a50101";
@@ -11,9 +12,9 @@ export default function Card({card}) {
 
     const [priorityBg, setPriorityBg] = useState(lowBg);
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const { updateCard} = useContext(CardsListContext);
+    const { updateCard,deleteCard,getCard} = useContext(CardsListContext);
     const [isUpdateCard, setIsUpdateCard] =  useState(false);
-
+    
 
     useEffect(()=>{
          switch(card.priority)
@@ -34,10 +35,18 @@ export default function Card({card}) {
     const CardActions ={
         viewDetails:()=>{console.log("details");
         },
-        updateCard: ()=>{
+        updateCard: async()=>{
+            card = await getCard(card.id);
             setIsUpdateCard(true)
         },
-        deleteCard: () =>{console.log("delete");
+        deleteCard: async () =>{
+            
+            const isConfirmed = await swalConfirm("You'r deleting a task! Sure to complete delete operation");
+
+            if(isConfirmed)
+            {
+                deleteCard(card.id)
+            }
         }
 }
 
