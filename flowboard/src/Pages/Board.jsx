@@ -31,7 +31,7 @@ export default function Board() {
     useEffect(()=>{
         loadCards(searchTerm,priorityFilter,memberFilter, setSuccess);
 
-    },[Members,searchTerm,priorityFilter,memberFilter]);
+    },[Members,searchTerm,priorityFilter,memberFilter,Cards]);
 
     filteredCards = Cards;
     
