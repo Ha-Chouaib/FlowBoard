@@ -14,6 +14,8 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
       const [member, setMember] = useState("");
       const [status, setStatus] = useState("todo");
       const [Tags, setTags] = useState([]);
+      const [isEditMode, setIsEditMode] = useState(false);
+
 
       useEffect(()=>{
 
@@ -26,6 +28,8 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
           setMember(cardToUpdate.assignee);
           setTags(cardToUpdate.tags);
           setDueDate(cardToUpdate.dueDate);
+
+          setIsEditMode(true)
         }
       },[cardToUpdate])
 
@@ -63,10 +67,11 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
         setTags([]);
         setDueDate("");
       }
+     
 
       function collectData()
       {
-        currentCard.id = -1;
+        
         currentCard.title = title;
         currentCard.description = description;
         currentCard.status = status;
@@ -74,22 +79,29 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
         currentCard.assignee = member;
         currentCard.dueDate = dueDate;
         currentCard.tags = Tags;
-        currentCard.createdAt =  Date.now().toString() ;
+        if(!isEditMode)
+          currentCard.createdAt =  Date.now().toString() ;
         currentCard.updatedAt =  Date.now().toString() ;
         
       }
-
-      function saveData()
+     
+      
+      function cancelOperation()
       {
+        OnClose(false);
+      }
+       function save()
+      {
+        
 
         Swal.fire({
-          title: "Sure to add this task?",
+          title: isEditMode? "Sure to save updates": "Sure to add this task?",
           showDenyButton: true,
           showCancelButton: true,
           confirmButtonText: "Yes",
           denyButtonText: `No`
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
+          
           if (result.isConfirmed)
             {
               let errMsg = validators.valideTitle(title) ?? validators.validDueDate(dueDate) ?? validators.validPriority(priority) ?? validators.validMember(member) ?? validators.validStatus(status) ;
@@ -98,22 +110,24 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
                 Swal.fire(errMsg, "", "error");
                 return;
               }
-              collectData();
-              AppendCard(currentCard);
-              Swal.fire("Saved!", "", "success");
+                collectData();
+              if(isEditMode)
+              {
+                updateCard(currentCard);
+              }else
+              {
+                AppendCard(currentCard);
+                Swal.fire("Saved!", "", "success");
+              }
+             
             } 
           else if (result.isDenied) Swal.fire("Changes are not saved", "", "info");
         });
         
         
-        //...
-      }
-      function cancelOperation()
-      {
-        OnClose(false);
       }
   return (
-    <form className='h-[100%] flex flex-col gap-4'>
+    <form  onSubmit={(e)=>{ e.preventDefault()}} className='h-[100%] flex flex-col gap-4'>
         <div className="flex flex-row justify-between items-center ">
             <div className="flex flex-row items-center gap-4">
               <span className="w-[30px] h-[30px] rounded-full bg-[#006aff] flex flex-row items-center justify-center font-bold text-[20px]">+</span>
@@ -223,7 +237,7 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
           onClick={_ =>{cancelOperation()}}
           className='w-[200px] h-[40px] rounded-lg outline-none border-2 border-[#0068fa] text-[#0068fa]'>Cancel</button>
           <button type='button'
-            onClick={_ => {saveData()}}
+            onClick={_ => {save()}}
            className='w-[200px] h-[40px] rounded-lg outline-none bg-[#0068fa]'>Save</button>
         </div>
     </form>
