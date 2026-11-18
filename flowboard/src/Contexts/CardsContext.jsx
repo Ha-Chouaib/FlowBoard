@@ -19,8 +19,8 @@ export default function CardsListProvider({children}) {
     );
     },[addedCards]);
 
-    const Pending = ()=> useShowPendingState();
-    const Success = () => useShowSuccessState();
+    const Pending = (msg = "Bringing the data, please wait.")=> useShowPendingState(msg);
+    const Success = (msg = "Data fetched successfully") => useShowSuccessState(msg);
     const Failure = (error) => useShowFailureState(error);
 
     function loadCards(searchTerm, priority, member , isRejected)
@@ -176,6 +176,33 @@ export default function CardsListProvider({children}) {
     }
     async function generateCardsWIthAI(description,tasksCount) {
         console.log(description,tasksCount)
+        const options = {
+            method: 'POST',
+            url: 'https://flowboard-api-virid.vercel.app/ai/cards',
+            headers: {
+              'X-Workspace': 'public',
+              'Content-Type': 'application/json'
+            },
+            data: {
+              description: description,
+              apiKey: 'gemini-3.1-flash-lite',
+              count: tasksCount
+            },
+            params:{
+            password:"1234", 
+            },
+            timeout: 30000
+        }
+
+        try {
+            Pending("Generating tasks ongoing ...")
+            const { data } = await axios.request(options)
+            Success("Tasks are generated successfully :)")
+            loadCards()
+          console.log(data)
+        } catch (error) {
+            Failure(error);
+        }
     }
 
   return (
