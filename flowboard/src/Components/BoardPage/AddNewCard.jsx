@@ -15,13 +15,14 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
       const [status, setStatus] = useState("todo");
       const [Tags, setTags] = useState([]);
       const [isEditMode, setIsEditMode] = useState(false);
+      const [ModalTitle , setModalTitle] = useState("Add new task")
 
       useEffect(()=>{
 
         if(cardToUpdate)
         {
         
-          
+          setModalTitle("Update task");
           setTitle(cardToUpdate.title);
           setDescription(cardToUpdate.description);
           setPriority(cardToUpdate.priority);
@@ -122,12 +123,13 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
         }
 
       }
+      
   return (
     <form  onSubmit={(e)=>{ e.preventDefault()}} className='h-[100%] flex flex-col gap-4'>
         <div className="flex flex-row justify-between items-center ">
             <div className="flex flex-row items-center gap-4">
               <span className="w-[30px] h-[30px] rounded-full bg-[#006aff] flex flex-row items-center justify-center font-bold text-[20px]">+</span>
-               <h3 className="font-black text-[2vw] ">New Card</h3>
+               <h3 className="font-black text-[2vw] ">{ModalTitle}</h3>
             </div>
             <span className="opacity-80 flex flex-row items-center justify-center bg-black rounded-full w-[30px] h-[30px] cursor-pointer
                             shadow-[inset_1px_1px_5px_1px_red]"

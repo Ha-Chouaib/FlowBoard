@@ -51,8 +51,8 @@ export default function ListCards({cards}) {
     }
 
   return (
-    <section  className={`min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px] max-h-[70vh]
-                        `}
+    <section  className={`min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px] max-h-[70vh]  overflow-y-auto 
+                            [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
                         style={{
                             backgroundColor:bgColor,
                             borderColor: brushColor,
@@ -70,7 +70,7 @@ export default function ListCards({cards}) {
                                     backgroundColor: brushColor
                                 }}>{cardsCount}</small>
         </div>
-        <div className="px-3 flex flex-col gap-4 max-h-[63vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="p-3 flex flex-col gap-4 max-h-[63vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {cards.map((c,index)=>{
                 return <Card card ={c}  key={index}/>
             })}

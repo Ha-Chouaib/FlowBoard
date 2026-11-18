@@ -8,17 +8,19 @@ import AddNewCard from "../Components/BoardPage/AddNewCard"
 import DisplayLoadingErrors from "../Components/BoardPage/DisplayLoadingErrors"
 import { useContext, useEffect, useState } from "react"
 import Modal from "../Components/Modal"
+import AddCardsByAI from "../Components/BoardPage/AddCardsByAI"
 
 export default function Board() {
     const filtersKey = "filters";
     const [filters, setFilters] = useState( JSON.parse( localStorage.getItem(filtersKey) ) ?? {priority: "all", member:"all"});
     
-    const { Cards , loadCards,appendNewCard} = useContext(CardsListContext);
+    const { Cards , loadCards,appendNewCard , generateCardsWIthAI} = useContext(CardsListContext);
     const {Members ,loadMembers} = useContext(MembersContext);
     const [searchTerm, setSearchTerm] = useState("");
     const [priorityFilter, setPriorityFilter] = useState(filters.priority);
     const [memberFilter, setMemberFilter] = useState(filters.member);
     const [IsAddNewWindowOpen, setAddNewOpenState] = useState(false);
+    const [IsAddAIwindowOpen, setAddAIOpenState] = useState(false);
     const [successObj, setSuccess ] = useState({success: true, errorMsg:""});
 
     const retry = () => loadCards(searchTerm,priorityFilter,memberFilter, setSuccess)
@@ -31,15 +33,17 @@ export default function Board() {
     useEffect(()=>{
         loadCards(searchTerm,priorityFilter,memberFilter, setSuccess);
 
-    },[Members,searchTerm,priorityFilter,memberFilter,Cards]);
+    },[Members,searchTerm,priorityFilter,memberFilter]);
 
     filteredCards = Cards;
     
 
   return (
     <div className="[grid-area:main] max-h-screen overflow-y-auto relative  flex justify-start flex-col gap-1">
+        <Modal modalContent={<AddCardsByAI OnClose={setAddAIOpenState} generateTasks={generateCardsWIthAI}/>} isOpen={IsAddAIwindowOpen} mainBg="#06162c61"/>
         <Modal modalContent={<AddNewCard OnClose={setAddNewOpenState} AppendCard={appendNewCard}/>} isOpen={IsAddNewWindowOpen} mainBg="#06162c61"/>
-        <Header OpenAddNewCardWindow ={setAddNewOpenState}/>
+        
+        <Header OpenAddNewCardWindow ={setAddNewOpenState} OpenAddAIWindow={setAddAIOpenState}/>
         <DisplayLoadingErrors isSuccess={successObj.success} errorMsg={successObj.errorMsg} retry={retry}/>
         <FilterCards OnSearchTermChanged={setSearchTerm} Filters={filters} OnFiltersChanged={setFilters} filtersKey={filtersKey} OnPriorityFilterChanged={setPriorityFilter}
                     OnMemberFilterChanged={setMemberFilter} />
