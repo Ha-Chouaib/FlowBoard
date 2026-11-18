@@ -110,7 +110,6 @@ export default function CardsListProvider({children}) {
     }
     async function updateCard(card)
     {
-        console.log(card)
     
         const options = {
           method: 'PUT',
@@ -175,9 +174,12 @@ export default function CardsListProvider({children}) {
       return null;
     }
     }
+    async function generateCardsWIthAI(description,tasksCount) {
+        console.log(description,tasksCount)
+    }
 
   return (
-    <CardsListContext.Provider value={{Cards , loadCards,appendNewCard,updateCard,deleteCard,getCard}}>
+    <CardsListContext.Provider value={{Cards , loadCards,appendNewCard,updateCard,deleteCard,getCard, generateCardsWIthAI}}>
         {children}
     </CardsListContext.Provider>
   )
