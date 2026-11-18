@@ -35,7 +35,7 @@ export default function AddCardsByAI({OnClose,generateTasks}) {
             <div className='flex items-center justify-between'>
                 <label className='w-1/3 flex flex-col gap-1' >
                     <small className='opacity-70 font-bold'>Tasks count</small>
-                    <input type='Number' min={1} max={10} name='tasksCount' onChange={(e)=>{ setTasksCount(e.currentTarget.value)}}
+                    <input type='Number' min={1} max={10} name='tasksCount' onChange={(e)=>{ setTasksCount(Number(e.currentTarget.value))}}
                      className='bg-[#000000b6] h-10 rounded-lg px-3'/>
                 </label>
                 <button  className=' bg-[#0066ff] px-5 py-2 rounded-full shadow-[inset_3px_3px_30px_6px_#5900ff] text-[#ffffffec]'>Generate tasks</button>
