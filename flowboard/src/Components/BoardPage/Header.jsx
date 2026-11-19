@@ -7,7 +7,7 @@ export default function Header({OpenAddNewCardWindow ,OpenAddAIWindow}) {
             <small className="opacity-80 text-[1rem]">Organize tasks <span className="text-[#2583FF] font-black">/</span> Track progress</small>
         </div>
         <div className="flex gap-2">
-            <button onClick={()=>{OpenAddAIWindow(true)}} className="bg-[#0866F5] rounded-lg px-5 py-3 h-[50px]">Append Tasks with AI</button>
+            <button onClick={()=>{OpenAddAIWindow(true)}} className="bg-[#0866F5] rounded-lg px-5 py-3 h-[50px]">Generate Tasks with AI</button>
             <button onClick={()=>{OpenAddNewCardWindow(true)}} className="bg-[#0866F5] rounded-lg px-5 py-3 h-[50px]">+ New card</button>
         </div>
        

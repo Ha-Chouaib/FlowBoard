@@ -14,7 +14,7 @@ export default function AddCardsByAI({OnClose,generateTasks}) {
         style= {{ backgroundImage: `url(${AIbg})`}}
         className="bg-cover bg-center bg-no-repeat  w-[100%] h-[400px] rounded-lg flex flex-col gap-6 shadow-[1px_1px_25px_5px_black]">
          <div className="flex flex-row justify-between items-center ">
-            <h3 className="font-black text-[2vw] px-10">Add Tasks With <span className='text-[#2f00ff]'>A</span><span className='text-[#5900ff]'>I</span></h3>
+            <h3 className="font-black text-[2vw] px-10">Generate Tasks With <span className='text-[#2f00ff]'>A</span><span className='text-[#5900ff]'>I</span></h3>
             <span className="opacity-80 flex flex-row items-center justify-center bg-black rounded-full w-[30px] h-[30px] cursor-pointer
                             shadow-[inset_1px_1px_5px_1px_red]"
                   onClick={()=>{OnClose(false)}}>X</span>
