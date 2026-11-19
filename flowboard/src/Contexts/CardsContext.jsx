@@ -168,7 +168,7 @@ export default function CardsListProvider({children}) {
             },
             data: {
               description: description,
-              apiKey: 'gemini-3.1-flash-lite',
+              apiKey: process.env.REACT_APP_GEMINI_API_KEY,
               count: tasksCount
             },
             params:{
