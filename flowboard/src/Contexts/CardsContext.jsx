@@ -23,63 +23,51 @@ export default function CardsListProvider({children}) {
     const Success = (msg = "Data fetched successfully") => useShowSuccessState(msg);
     const Failure = (error) => useShowFailureState(error);
 
-    function loadCards(searchTerm, priority, member , isRejected)
+    async function loadTasks(searchTerm, priority, member , isRejected)
     {
-        const url = new URL("/cards","https://flowboard-api-virid.vercel.app");
-        const searchTermKey = "title_like";
-        const priorityKey = "priority";
-        const memberKey = "assignee";
+
+        const params = {
+          
+        }
 
         if(searchTerm)
-            url.searchParams.set(searchTermKey,searchTerm);
+            params.title_like = searchTerm;
            
         if(priority && priority !== "all")
-            url.searchParams.set(priorityKey,priority);
+            params.priority = priority;
             
         if(member && member !== "all")
-            url.searchParams.set(memberKey,member);
+            params.assignee = member;
             
 
-        let result = fetch(url.toString(), {headers: {'X-Workspace': 'public'}});
+    
+    const options = {
+      method: 'GET',
+      url: 'https://flowboard-api-virid.vercel.app/cards',
+      params: params,
+      headers: {
+        'X-Workspace': 'public'
+      }
+    }
 
-            result.then( res =>{
-                if(res.ok)
-                {   
-                    if(isRejected)
-                        isRejected({success:true, errorMsg:""});
-                    
-                    return res.json();
-                }else
-                    throw new Error(res.statusText);
+    try {
+        Pending();
+        const { data } = await axios.request(options)
+        setCards(data);
+        Success();
+        if(isRejected)
+        isRejected({success:true, errorMsg:""});
 
-            }).then( data =>{
+    } catch (error) {
+        Failure(error);
+        if(isRejected)
+            isRejected({success:false, errorMsg: error});
 
-                
-                let filtredLocalCards = addedCards;  
-
-                if(filtredLocalCards.length > 0)
-                {
-                    if(searchTerm)
-                        filtredLocalCards= filtredLocalCards?.filter(c => c.title?.toLocaleLowerCase().includes(searchTerm?.toLocaleLowerCase()))
-                    if(priority && priority !== "all")
-                        filtredLocalCards = filtredLocalCards?.filter(c => c.priority === priority);
-                    if(member && member !== "all")
-                        filtredLocalCards = filtredLocalCards?.filter(c => c.assignee === member);
-
-                    setCards([...data,...filtredLocalCards]);
-                }
-                else
-                    setCards(data);
-                
-            }).catch(e => {
-                if(isRejected)
-                isRejected({success:false, errorMsg: e.message});
-                
-            });
+    }
             
     }
     
-    async function appendNewCard(card)
+    async function appendNewTask(card)
     {
 
         const options = {
@@ -103,7 +91,7 @@ export default function CardsListProvider({children}) {
         }
         
     }
-    async function updateCard(card)
+    async function updateTask(card)
     {
     
         const options = {
@@ -120,7 +108,7 @@ export default function CardsListProvider({children}) {
 
         Pending();
         const { data } = await axios.request(options);
-        loadCards()
+        loadTasks()
         Success();
             
         } catch (error) {
@@ -128,7 +116,7 @@ export default function CardsListProvider({children}) {
         }
     }
 
-    async function deleteCard(id)
+    async function deleteTask(id)
     {
 
         const options = {
@@ -150,7 +138,7 @@ export default function CardsListProvider({children}) {
         }
     }
 
-    async function getCard(id) {
+    async function getTask(id) {
         
 
     const options = {
@@ -169,7 +157,7 @@ export default function CardsListProvider({children}) {
       return null;
     }
     }
-    async function generateCardsWIthAI(description,tasksCount) {
+    async function generateTasksWIthAI(description,tasksCount) {
         console.log(description,tasksCount)
         const options = {
             method: 'POST',
@@ -193,7 +181,7 @@ export default function CardsListProvider({children}) {
             Pending("Generating tasks ongoing ...")
             const { data } = await axios.request(options)
             Success("Tasks are generated successfully :)")
-            loadCards()
+            loadTasks()
           console.log(data)
         } catch (error) {
             Failure(error);
@@ -201,7 +189,7 @@ export default function CardsListProvider({children}) {
     }
 
   return (
-    <CardsListContext.Provider value={{Cards , loadCards,appendNewCard,updateCard,deleteCard,getCard, generateCardsWIthAI}}>
+    <CardsListContext.Provider value={{Cards , loadCards: loadTasks,appendNewCard: appendNewTask,updateCard: updateTask,deleteCard: deleteTask,getCard: getTask, generateCardsWIthAI: generateTasksWIthAI}}>
         {children}
     </CardsListContext.Provider>
   )
