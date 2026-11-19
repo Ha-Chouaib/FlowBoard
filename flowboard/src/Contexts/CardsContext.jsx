@@ -51,10 +51,10 @@ export default function CardsListProvider({children}) {
     }
 
     try {
-        Pending();
+        // Pending();
         const { data } = await axios.request(options)
         setCards(data);
-        Success();
+        // Success();
         if(isRejected)
         isRejected({success:true, errorMsg:""});
 
