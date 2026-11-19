@@ -6,18 +6,11 @@ export const CardsListContext = createContext(null);
 
 export default function CardsListProvider({children}) {
 
-    const addedCardsKey = "addedCards";
+    const apiKey =  process.env.REACT_APP_GEMINI_API_KEY;
 
+   
+  
     const [Cards , setCards] = useState([]);
-    const [addedCards, setAddedCards] =  useState(() => {return JSON.parse(localStorage.getItem(addedCardsKey)) ?? [];});
-
-    
-    useEffect(()=>{
-        localStorage.setItem(
-        addedCardsKey,
-        JSON.stringify(addedCards)
-    );
-    },[addedCards]);
 
     const Pending = (msg = "Bringing the data, please wait.")=> useShowPendingState(msg);
     const Success = (msg = "Data fetched successfully") => useShowSuccessState(msg);
@@ -158,7 +151,7 @@ export default function CardsListProvider({children}) {
     }
     }
     async function generateTasksWIthAI(description,tasksCount) {
-        console.log(description,tasksCount)
+        
         const options = {
             method: 'POST',
             url: 'https://flowboard-api-virid.vercel.app/ai/cards',
@@ -168,7 +161,7 @@ export default function CardsListProvider({children}) {
             },
             data: {
               description: description,
-              apiKey: 'gemini-3.1-flash-lite',
+              apiKey: process.env.REACT_APP_GEMINI_API_KEY,
               count: tasksCount
             },
             params:{
@@ -182,8 +175,9 @@ export default function CardsListProvider({children}) {
             const { data } = await axios.request(options)
             Success("Tasks are generated successfully :)")
             loadTasks()
-          console.log(data)
         } catch (error) {
+          
+
             Failure(error);
         }
     }
