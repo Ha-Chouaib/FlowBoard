@@ -51,8 +51,8 @@ export default function ListCards({cards}) {
     }
 
   return (
-    <section  className={`min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px] max-h-[70vh]  overflow-y-auto 
-                            [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
+    <section  className={`w-full sm:w-[80%]  lg:w-[30%] min-w-0 sm:min-w-[300px] min-h-[200px] max-h-[85vh] md:max-h-[70vh] rounded-[15px] border-t-[3px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
+
                         style={{
                             backgroundColor:bgColor,
                             borderColor: brushColor,

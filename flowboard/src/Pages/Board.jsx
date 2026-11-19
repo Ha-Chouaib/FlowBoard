@@ -39,7 +39,7 @@ export default function Board() {
     
 
   return (
-    <div className="[grid-area:main] max-h-screen overflow-y-auto relative  flex justify-start flex-col gap-1">
+    <div className="[grid-area:main] max-h-screen overflow-y-auto relative  flex justify-start flex-col gap-1 ">
         <Modal modalContent={<AddCardsByAI OnClose={setAddAIOpenState} generateTasks={generateCardsWIthAI}/>} isOpen={IsAddAIwindowOpen} mainBg="#06162c61"/>
         <Modal modalContent={<AddNewCard OnClose={setAddNewOpenState} AppendCard={appendNewCard}/>} isOpen={IsAddNewWindowOpen} mainBg="#06162c61"/>
         
@@ -47,7 +47,7 @@ export default function Board() {
         <DisplayLoadingErrors isSuccess={successObj.success} errorMsg={successObj.errorMsg} retry={retry}/>
         <FilterCards OnSearchTermChanged={setSearchTerm} Filters={filters} OnFiltersChanged={setFilters} filtersKey={filtersKey} OnPriorityFilterChanged={setPriorityFilter}
                     OnMemberFilterChanged={setMemberFilter} />
-        <div className="flex flex-row justify-center items-start gap-5 mt-4">
+        <div className="flex flex-row justify-center items-start gap-5 mt-4 flex-wrap">
 
             <ListCards cards = {filteredCards?.filter(c => c.status ==="todo" ) } />
             <ListCards cards = {filteredCards?.filter(c => c.status ==="in-progress" ) }/>
