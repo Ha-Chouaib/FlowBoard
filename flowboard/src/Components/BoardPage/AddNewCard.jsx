@@ -53,6 +53,7 @@ export default function AddNewCard({OnClose, AppendCard, updateCard,cardToUpdate
       
 
       const appendTag = (tag)=>{
+        if(!tag.trim()) return;
         if(!Tags.includes(tag))
           setTags([...Tags,tag]);
         

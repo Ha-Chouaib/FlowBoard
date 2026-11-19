@@ -79,34 +79,29 @@ export default function CardsListProvider({children}) {
             
     }
     
-    function appendNewCard(card)
+    async function appendNewCard(card)
     {
 
-        // const options = {
-        //   method: 'POST',
-        //   url: 'https://flowboard-api-virid.vercel.app/cards',
-        //   headers: {
-        //     'X-Workspace': 'public',
-        //     'Content-Type': 'application/json'
-        //   },
-        //   data: {
-        //     title: 'Ajouter le mode sombre',
-        //     status: 'todo',
-        //     priority: 'medium',
-        //     assignee: 'Amina Haddad',
-        //     dueDate: '2026-12-01',
-        //     tags: ['ui']
-        //   }
-        // }
+        const options = {
+          method: 'POST',
+          url: 'https://flowboard-api-virid.vercel.app/cards',
+          headers: {
+            'X-Workspace': 'public',
+            'Content-Type': 'application/json'
+          },
+          data: card,
+          params:{password : "1234"},
+        }
 
-        // try {
-        //   const { data } = await axios.request(options)
-        //   console.log(data)
-        // } catch (error) {
-        //   console.error(error)
-        // }
-        setCards([...Cards,card]);
-        setAddedCards(prev => [...prev,card]);
+        try {
+            Pending()
+            const { data } = await axios.request(options)
+            Success("Task Added Successfully :)")
+            setCards([...Cards,card])
+        } catch (error) {
+            Failure(error)
+        }
+        
     }
     async function updateCard(card)
     {
