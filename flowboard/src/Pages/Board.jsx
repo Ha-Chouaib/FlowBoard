@@ -14,7 +14,7 @@ export default function Board() {
     const filtersKey = "filters";
     const [filters, setFilters] = useState( JSON.parse( localStorage.getItem(filtersKey) ) ?? {priority: "all", member:"all"});
     
-    const { Cards , loadCards,appendNewCard , generateCardsWIthAI} = useContext(CardsListContext);
+    const { Cards , loadCards: loadTasks,appendNewCard , generateCardsWIthAI} = useContext(CardsListContext);
     const {Members ,loadMembers} = useContext(MembersContext);
     const [searchTerm, setSearchTerm] = useState("");
     const [priorityFilter, setPriorityFilter] = useState(filters.priority);
@@ -23,7 +23,7 @@ export default function Board() {
     const [IsAddAIwindowOpen, setAddAIOpenState] = useState(false);
     const [successObj, setSuccess ] = useState({success: true, errorMsg:""});
 
-    const retry = () => loadCards(searchTerm,priorityFilter,memberFilter, setSuccess)
+    const retry = () => loadTasks(searchTerm,priorityFilter,memberFilter, setSuccess)
 
     let filteredCards = [];
     useEffect(()=>{
@@ -31,7 +31,7 @@ export default function Board() {
     },[])
 
     useEffect(()=>{
-        loadCards(searchTerm,priorityFilter,memberFilter, setSuccess);
+        loadTasks(searchTerm,priorityFilter,memberFilter, setSuccess);
 
     },[Members,searchTerm,priorityFilter,memberFilter]);
 
