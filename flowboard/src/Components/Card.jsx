@@ -4,6 +4,7 @@ import { CardsListContext } from '../Contexts/CardsContext';
 import Modal from './Modal';
 import AddNewCard from './BoardPage/AddNewCard';
 import { swalConfirm } from '../Hooks/SwalConfirmation';
+import { useDraggable } from '@dnd-kit/core';
 
 export default function Card({card}) {
     const highBg = "#a50101";
@@ -50,15 +51,15 @@ export default function Card({card}) {
         }
 }
 
+    const {attributes,listeners,setNodeRef,transform} = useDraggable({id: card.id});
+    const style = transform ? {transform: `translate(${transform.x}px, ${transform.y}px)`,  borderLeftColor: priorityBg} : {borderLeftColor: priorityBg};
 
     return (
-        <>
+        <div>
          <Modal modalContent={<AddNewCard OnClose={setIsUpdateCard} updateCard={updateCard} cardToUpdate={card} />}  isOpen={isUpdateCard} mainBg="#06162c61"/>
-        <article  className="bg-[#111D32] rounded-lg min-w-[200px] border-l-[5px] relative
-                        p-5 flex flex-row justify-between shadow-[0px_3px_7px_4px_#07070848]"
-            style={{
-                borderLeftColor: priorityBg
-            }}>
+        <article  ref={setNodeRef} {...listeners} {...attributes}  className="bg-[#111D32] rounded-lg min-w-[200px] border-l-[5px] relative
+                        p-5 flex flex-row justify-between shadow-[0px_3px_7px_4px_#07070848] cursor-grab"
+            style={style}>
         <div className="flex  flex-col gap-2 flex-grow-1">
             <h3>{card.title}</h3>
             <select className={`rounded-full text-[9px] font-bold px-3 w-[80px]
@@ -72,14 +73,16 @@ export default function Card({card}) {
                 <small>{card.dueDate}</small> 
                 <small className="bg-[#18253B] px-2 rounded-lg shadow-[0px_0px_2px_2px_#ffffff3a]">{card.assignee}</small> </div>
             </div>
-        <div className="flex flex-col justify-between" >
-            <button onClick={()=>{setIsMenuOpen(!isMenuOpen)}}
-            className="cursor-pointer">⋮</button>
+        <div className="flex flex-col justify-between " >
+            <button 
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e)=>{ e.stopPropagation(); setIsMenuOpen(!isMenuOpen)}}
+            className="cursor-pointer ">⋮</button>
             <span className="cursor-pointer flex items-center justify-center font-black text-[20px] bg-black w-[30px] h-[30px] rounded-full">♟</span> 
         </div>
-        <CardContextMenu showContextMenu={isMenuOpen} isMenuOpen={setIsMenuOpen} cardActions={CardActions} />
+        <CardContextMenu  showContextMenu={isMenuOpen} isMenuOpen={setIsMenuOpen} cardActions={CardActions} />
     </article>
-        </>
+        </div>
     
   )
 }
