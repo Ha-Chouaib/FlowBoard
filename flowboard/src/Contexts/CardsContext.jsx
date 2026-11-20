@@ -19,9 +19,7 @@ export default function CardsListProvider({children}) {
     async function loadTasks(searchTerm, priority, member , isRejected)
     {
 
-        const params = {
-          
-        }
+        const params = {}
 
         if(searchTerm)
             params.title_like = searchTerm;
