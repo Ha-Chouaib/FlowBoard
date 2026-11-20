@@ -181,9 +181,30 @@ export default function CardsListProvider({children}) {
             Failure(error);
         }
     }
+    async function updateTaskStatus(taskID,status) {
+     
+      const options = {
+        method: 'PATCH',
+        url: 'https://flowboard-api-virid.vercel.app/cards/'+taskID +"?password=1234",
+        headers: {
+          'X-Workspace': 'public',
+          'Content-Type': 'application/json'
+        },
+        data: {
+          status: status
+        }
+      }
 
+      try {
+        
+        const { data } = await axios.request(options)
+        loadTasks()
+      } catch (error) {
+        Failure("couldn't change task status")
+      }      
+    }
   return (
-    <CardsListContext.Provider value={{Cards , loadCards: loadTasks,appendNewCard: appendNewTask,updateCard: updateTask,deleteCard: deleteTask,getCard: getTask, generateCardsWIthAI: generateTasksWIthAI}}>
+    <CardsListContext.Provider value={{Cards , loadCards: loadTasks,appendNewCard: appendNewTask,updateCard: updateTask,deleteCard: deleteTask,getCard: getTask, generateCardsWIthAI: generateTasksWIthAI,updateTaskStatus}}>
         {children}
     </CardsListContext.Provider>
   )

@@ -1,6 +1,8 @@
 import { useEffect, useState,useCallback } from "react";
 import Card from "../Card"
-export default function ListCards({cards}) {
+import { useDroppable } from "@dnd-kit/core";
+
+export default function ListCards({cards,status}) {
 
 
     const [bgColor , setBgColor] = useState("");
@@ -38,20 +40,25 @@ export default function ListCards({cards}) {
         }
     },[cards]);
 
-
- if(cards.length === 0)
+    const {setNodeRef} = useDroppable({
+        id: status
+    })
+    if(cards.length === 0)
     {
         return(
             <div className="bg-[#0057fa12] min-h-[200px] min-w-[250px] w-[30%] rounded-[15px] border-t-[3px]  border-[#3B82F6]
-                        shadow-[inset_0_0px_2px_2px_#3B82F6] max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+                        shadow-[inset_0_0px_2px_2px_#3B82F6]  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
                         flex items-center justify-center">
                 <p className="px-10 py-5 bg-zinc-950 rounded-full opacity-80">No tasks avialable to be listed</p>
             </div>
         );
     }
 
+    
+
   return (
-    <section  className={`w-full sm:w-[80%]  lg:w-[30%] min-w-0 sm:min-w-[300px] min-h-[200px] max-h-[85vh] md:max-h-[70vh] rounded-[15px] border-t-[3px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
+
+    <section  className={`w-full sm:w-[80%]  lg:w-[30%] min-w-0 sm:min-w-[300px] min-h-[200px]  rounded-[15px] border-t-[3px]  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
 
                         style={{
                             backgroundColor:bgColor,
@@ -70,7 +77,7 @@ export default function ListCards({cards}) {
                                     backgroundColor: brushColor
                                 }}>{cardsCount}</small>
         </div>
-        <div className="p-3 flex flex-col gap-4 max-h-[63vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div ref={setNodeRef} className="p-3 flex flex-col gap-4  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {cards.map((c,index)=>{
                 return <Card card ={c}  key={index}/>
             })}
